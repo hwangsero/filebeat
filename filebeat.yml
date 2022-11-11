@@ -1,0 +1,73 @@
+#setup.template.name: "filebeat"
+#setup.template.pattern: "filebeat"
+
+#setup.template.enabled: false
+
+#filebeat.overwrite_pipelines: true
+#setup.template.settings:
+#  index.number_of_shards: 1
+
+#filebeat.config.modules.path: ${path.config}/modules.d/*.yml 
+
+#filebeat.modules:
+#- module: nginx
+#- module: system
+
+
+filebeat.inputs:
+# log plugin이 deprecated 되어 filestream을 사용하는 것이 권장되나
+# filestream에서 tail log만 읽는 설정이 잘 안되어서 임시로 log plugin을 사용
+- type: log
+  paths:
+    - "/var/log/logs/settlement_laravel.log"
+  tags: ["laravel"]
+  fields:
+    index_name: "aacdd-my-template-roimon-laravel"
+  parsers:
+  - multiline:
+      type: pattern
+      pattern: '^\['
+      negate: true
+      match: after
+  tail_files: true
+
+#- type: filestream
+#  paths:
+#    - "/var/log/logs/settlement_laravel.log"
+#  tags: ["laravel"]
+#  fields:
+#    index_name: "index-settlement-laravel"
+#  parsers:
+#  - multiline:
+#      type: pattern
+#      pattern: '^\['
+#      negate: true
+#      match: after
+
+#- type: filestream
+#  paths:
+#    - "/var/log/logs/maria.log"
+#  fields:
+#    index_name: "maria"
+
+
+#filebeat.inputs:
+#- type: log
+#  enabled: true
+#  paths:
+#  - "/var/log/sssss/access.log"
+
+#parsers:
+#- multiline:
+#    type: pattern
+#    pattern: '================'
+#    negate: true
+#    match: after
+#
+output.logstash:
+  hosts: ["192.168.127.38:5000"]
+  #hosts: ["host.docker.internal:5000"]
+setup.kibana:
+  #host: ["host.docker.internal:5601"]
+  hosts: ["192.168.127.38:5601"]
+
