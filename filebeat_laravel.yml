@@ -19,18 +19,17 @@ filebeat.inputs:
 # filestream에서 tail log만 읽는 설정이 잘 안되어서 임시로 log plugin을 사용
 - type: log
   paths:
-    - "/var/log/filebeat/error.log"
-  tags: ["nginx_error"]
+    - "/var/log/filebeat/settlement_laravel.log"
+  tags: ["laravel"]
   fields:
-    index_name: "proxy1-nginx-error4"
-#  tail_files: true
-
-- type: log
-  paths:
-    - "/var/log/filebeat/access.log"
-  tags: ["nginx_access"]
-  fields:
-    index_name: "proxy1-nginx-access"
+    index_name: "aacdd-my-template-roimon-laravel"
+  parsers:
+  - multiline:
+      type: pattern
+      pattern: '^\['
+      negate: true
+      match: after
+  tail_files: true
 
 #- type: filestream
 #  paths:
