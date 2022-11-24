@@ -1,36 +1,22 @@
-#setup.template.name: "filebeat"
-#setup.template.pattern: "filebeat"
-
-#setup.template.enabled: false
-
-#filebeat.overwrite_pipelines: true
-#setup.template.settings:
-#  index.number_of_shards: 1
-
-#filebeat.config.modules.path: ${path.config}/modules.d/*.yml 
-
-#filebeat.modules:
-#- module: nginx
-#- module: system
-
-
 filebeat.inputs:
 # log plugin이 deprecated 되어 filestream을 사용하는 것이 권장되나
 # filestream에서 tail log만 읽는 설정이 잘 안되어서 임시로 log plugin을 사용
-- type: log
-  paths:
-    - "/var/log/filebeat/error.log"
-  tags: ["nginx_error"]
-  fields:
-    index_name: "proxy1-nginx-error4"
+#- type: log
+#  paths:
+#    - "/var/log/filebeat/error.log"
+#  tags: ["nginx_error"]
+#  fields:
+#    index_name: "proxy1-nginx-error4"
 #  tail_files: true
 
 - type: log
   paths:
-    - "/var/log/filebeat/access.log"
-  tags: ["nginx_access"]
-  fields:
-    index_name: "proxy1-nginx-access"
+    - "/var/log/filebeat/*.log"
+  tags: ["pattern_log"]
+#- type: log
+#  paths:
+#    - "/var/log/filebeat/master1-slow.log"
+#  tags: ["mariadb_slow_log"]
 
 #- type: filestream
 #  paths:
@@ -66,9 +52,7 @@ filebeat.inputs:
 #    match: after
 #
 output.logstash:
-  hosts: ["192.168.127.38:5000"]
-  #hosts: ["host.docker.internal:5000"]
+  hosts: ["192.168.226.96:5000"]
 setup.kibana:
-  #host: ["host.docker.internal:5601"]
-  hosts: ["192.168.127.38:5601"]
+  hosts: ["192.168.226.96:5601"]
 
