@@ -1,0 +1,18 @@
+filebeat.inputs:
+
+- type: log
+  paths:
+    - "/var/log/filebeat/access.log"
+  tags: ["nginx_access"]
+  fields:
+    index_name: "kafka_test"
+
+output.kafka:
+  enalbed: true
+  hosts: ["192.168.127.38:9092"]
+  topic: 'filebeat_test'
+#  codec.json:
+#    pretty: false
+#  codec.format:
+#    string: '%{[message]}'
+
